@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 from tkinter import messagebox
 import mysql.connector
+import cv2
 
 
 class Student:
@@ -153,12 +154,12 @@ class Student:
         delete.grid(row=1,column=5,padx=2)
 
         #take photo,
-        take= Button(btn_frame,text="Take Photo",width=15,font=("arial",12,"bold"),bg="gold",fg="green")
+        take= Button(btn_frame,command=self.gen_dataset,text="Take Photo",width=15,font=("arial",12,"bold"),bg="gold",fg="green")
         take.grid(row=2,column=1,padx=2)
 
         #update photo
-        take= Button(btn_frame,text="Update Photo",width=15,font=("arial",12,"bold"),bg="gold",fg="green")
-        take.grid(row=2,column=3,padx=2)
+        update_photo= Button(btn_frame,text="Update Photo",width=15,font=("arial",12,"bold"),bg="gold",fg="green")
+        update_photo.grid(row=2,column=3,padx=2)
 
         # Right frame
         Right_frame = LabelFrame(main_frame, bd=2, bg="white", relief=RIDGE, text="Student Info", font=("arial", 15, "bold"))
@@ -337,8 +338,70 @@ class Student:
             
             except Exception as es:
                 messagebox.showerror("Error",f"Due To :{str(es)}",parent=self.root)
-              
 
+
+    #  take photo sample----------------------------------------------------------------
+
+    def gen_dataset(self):
+        if self.var_dep.get()=="Select Department" or self.var_name.get()=="":
+             messagebox.showerror("Error","All fields are required",parent=self.root)
+        else:
+            try:
+                conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
+                my_cursor=conn.cursor()
+                my_cursor.execute("select * from student")
+                result=my_cursor.fetchall()
+                id=0
+                for x in result:
+                    id+=1
+                my_cursor.execute("update student set Dep=%s,course=%s,year=%s,name=%s,photo=%s where roll_no =%s",(
+                                                                                self.dep_var.get(),
+                                                                                self.var_course.get(),
+                                                                                self.year_var.get(),
+                                                                                self.var_name.get(),       
+                                                                                self.var_rad1.get(),  
+                                                                                self.var_rollno.get()==id+1
+                                                                                                                                                    
+                ))
+                conn.commit()
+                self.fetch()
+                conn.close()
+
+                #loading algorithm face frontal for opencv
+                face_classifier = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+
+                def face_crop(img):
+                    gray_scale = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+                    faces=face_classifier.detectMultiScale(gray_scale,1.3,5) #scaling factor=1.3 min neighborhood=5
+                    
+                    for (x,y,w,h) in faces:
+                        face_crop=img[y:y+h,x:x+w]
+                        return face_crop
+                    
+                cap = cv2.VideoCapture(1)
+    
+
+                img_id=0
+                while True:
+                    ret,my_frame=cap.read()
+                    if face_crop(my_frame) is not None:
+                        img_id+=1
+                        face= cv2.resize(face_crop(my_frame),(450,450))
+                        face= cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+                        file_path="data/user."+str(id)+"."+str(img_id)+".jpg"
+                        cv2.imwrite(file_path,face)
+                        cv2.putText(face,str(img_id),(50,50),cv2.FONT_HERSHEY_COMPLEX,2,(0,255,0),2)    #font size during cam
+                        cv2.imshow("TATE",face)
+
+                    if cv2.waitKey(1) == 13 or int(img_id)==100:
+                        break
+
+                cap.release()
+                cv2.destroyAllWindows()
+                messagebox.showinfo("Result","Generating data sets completed!",parent=self.root)
+        
+            except Exception as es:
+                messagebox.showerror("Error",f"Due To :{str(es)}",parent=self.root)
 
 if __name__ == "__main__": 
     root = Tk()
