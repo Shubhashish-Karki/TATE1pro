@@ -24,7 +24,7 @@ class Student:
 
 
         # Background image
-        img1 = Image.open(r"C:\Users\shubh\OneDrive\Desktop\TATE\images\student.jpg")
+        img1 = Image.open(r"images\student.jpg")
         img1 = img1.resize((1700, 1000))
         self.photimg1 = ImageTk.PhotoImage(img1)
 
@@ -42,7 +42,7 @@ class Student:
         Left_frame = LabelFrame(main_frame, bd=2, bg="white", relief=RIDGE, text="Student Info", font=("arial", 15, "bold"))
         Left_frame.place(x=10, y=10, width=720, height=650)
 
-        leftimg1 = Image.open(r"C:\Users\shubh\OneDrive\Desktop\TATE\images\leftimg1.jpg")
+        leftimg1 = Image.open(r"images\leftimg1.jpg")
         leftimg1 = leftimg1.resize((700, 130))
         self.photimg_left = ImageTk.PhotoImage(leftimg1)
 
@@ -165,7 +165,7 @@ class Student:
         Right_frame = LabelFrame(main_frame, bd=2, bg="white", relief=RIDGE, text="Student Info", font=("arial", 15, "bold"))
         Right_frame.place(x=770, y=10, width=720, height=650)
 
-        rightimg1 = Image.open(r"C:\Users\shubh\OneDrive\Desktop\TATE\images\rightimg1.jpg")
+        rightimg1 = Image.open(r"images\rightimg1.jpg")
         rightimg1 = rightimg1.resize((700, 130))
         self.photoimg_right = ImageTk.PhotoImage(rightimg1)
 
