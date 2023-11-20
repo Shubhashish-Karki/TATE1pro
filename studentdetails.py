@@ -195,7 +195,7 @@ class Student:
 
         #student database 
         table_frame = Frame(Right_frame, bd=2,bg="white",relief=RIDGE)
-        table_frame.place(x=5,y=220, width= 710, height=350,)
+        table_frame.place(x=5,y=220, width= 710, height=350)
         
         scroll_x=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
         scroll_y=ttk.Scrollbar(table_frame,orient=VERTICAL)
