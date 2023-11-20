@@ -44,8 +44,8 @@ class Train:
         
         for image in path:
             img=Image.open(image).convert('L') #greyscale
-            imageNp=np.array(img,'unit8')
-            id=int(os.path.split(image)[1].split(".")[1])
+            imageNp=np.array(img,'uint8')
+            id=int(os.path.split(image)[1].split('.')[1])
             
             faces.append(imageNp)
             ids.append(id)

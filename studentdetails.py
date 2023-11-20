@@ -21,6 +21,7 @@ class Student:
         self.year_var = StringVar()
         self.var_name=StringVar()
         self.var_rollno=StringVar()
+        self.var_sid=StringVar()
 
 
         # Background image
@@ -242,13 +243,15 @@ class Student:
             try:
                 conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
                 my_cursor=conn.cursor()
-                my_cursor.execute("insert into student values(%s,%s,%s,%s,%s,%s)",(
+                my_cursor.execute("insert into student values(%s,%s,%s,%s,%s,%s,%s)",(
                                                                                 self.dep_var.get(),
                                                                                 self.var_course.get(),
                                                                                 self.year_var.get(),
                                                                                 self.var_name.get(),
                                                                                 self.var_rollno.get(),
                                                                                 self.var_rad1.get(),
+                                                                                None
+                                                                                
                                                                         ))
                 conn.commit()
                 self.fetch()
@@ -283,6 +286,7 @@ class Student:
         self.var_name.set(data[3])
         self.var_rollno.set(data[4])
         self.var_rad1.set(data[5])
+        self.var_sid.set(data[6])
 
     #function to update info:
     def update(self):
@@ -295,13 +299,15 @@ class Student:
 
                     conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
                     my_cursor=conn.cursor()
-                    my_cursor.execute("update student set Dep=%s,course=%s,year=%s,name=%s,photo=%s where roll_no =%s",(
+                    my_cursor.execute("update student set Dep=%s,course=%s,year=%s,name=%s,roll_no = %s,photo=%s where sid =%s",(
                                                                                 self.dep_var.get(),
                                                                                 self.var_course.get(),
                                                                                 self.year_var.get(),
-                                                                                self.var_name.get(),       
-                                                                                self.var_rad1.get(),  
-                                                                                self.var_rollno.get()
+                                                                                self.var_name.get(), 
+                                                                                self.var_rollno.get(),      
+                                                                                self.var_rad1.get(),
+                                                                                self.var_sid.get(),
+                                                                                
                                                                                                                                                     
                     ))
                     conn.commit()
@@ -327,7 +333,7 @@ class Student:
 
                     conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
                     my_cursor=conn.cursor()
-                    my_cursor.execute("delete  from student where roll_no =%s",(self.var_rollno.get(),))
+                    my_cursor.execute("delete  from student where sid =%s",(self.var_sid.get(),))
                 else:
                     if not delete:
                         return
@@ -354,13 +360,14 @@ class Student:
                 id=0
                 for x in result:
                     id+=1
-                my_cursor.execute("update student set Dep=%s,course=%s,year=%s,name=%s,photo=%s where roll_no =%s",(
+                my_cursor.execute("update student set Dep=%s,course=%s,year=%s,name=%s,roll_no=%s,photo=%s where sid =%s",(
                                                                                 self.dep_var.get(),
                                                                                 self.var_course.get(),
                                                                                 self.year_var.get(),
-                                                                                self.var_name.get(),       
+                                                                                self.var_name.get(), 
+                                                                                self.var_rollno.get(),      
                                                                                 self.var_rad1.get(),  
-                                                                                self.var_rollno.get()==id+1
+                                                                                self.var_sid.get()==id+1
                                                                                                                                                     
                 ))
                 conn.commit()

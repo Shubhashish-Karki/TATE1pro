@@ -44,33 +44,33 @@ class Face_Recognition:
                 cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),3)
                 id,predict=clf.predict(gray_img[y:y+h,x:x+h])
                 confidence=int(100*(1-predict/300))
-                print("predict="+predict+"confidence="+confidence)
+                print("predict="+str(predict)+"confidence="+ str(confidence))
                 
                 conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
                 my_cursor=conn.cursor()
                 
-                my_cursor.execute("select name from student where roll_no="+str(id))#########  roll_no ki Student_id?
+                my_cursor.execute("select name from student where sid="+str(id))#########  roll_no ki Student_id?
                 n=my_cursor.fetchone()
-                n="+".join(n)
+                n="".join(str(n))
                 
-                my_cursor.execute("select roll_no from student where roll_no="+str(id)) #########  roll_no ki Student_id?
+                my_cursor.execute("select roll_no from student where sid="+str(id)) #########  roll_no ki Student_id?
                 r=my_cursor.fetchone()
-                r="+".join(r)
+                r="".join(str(r))
                 
-                my_cursor.execute("select Dep from student where roll_no="+str(id)) #########  roll_no ki Student_id?
+                my_cursor.execute("select Dep from student where sid="+str(id)) #########  roll_no ki Student_id?
                 d=my_cursor.fetchone()
-                d="+".join(d)
+                d="".join(str(d))
                 
                 
                 
-                if confidence>77:
+                if confidence>70:
                     cv2.putText(img,f"Roll:{r}",(x,y-55),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
                     cv2.putText(img,f"Name:{n}",(x,y-30),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
                     cv2.putText(img,f"Department:{d}",(x,y-5),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
                 else:
                     cv2.rectangle(img,( x,y),(x+w,y+h),(0,0,255),3)
-
                     cv2.putText(img,"Unknown face",(x,y-5),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
+                
                 coord=[x,y,w,h]
             return coord
         
@@ -82,17 +82,21 @@ class Face_Recognition:
         clf=cv2.face.LBPHFaceRecognizer_create()
         clf.read("classifier.xml")
         
-        video_cap=cv2.VideoCapture(0)
+        video_cap=cv2.VideoCapture(1)
         while True:
-            ret,img=video_cap.read()
-            img=recognize(img,clf,faceCascade)
-            cv2.imshow("Welcome to face Recognition",img)
-            
-            if cv2.waitKey(1)==13:
+            ret, img = video_cap.read()
+
+    # Check if the frame was successfully captured
+            if ret:
+                img = recognize(img, clf, faceCascade)
+                cv2.imshow("Welcome to face Recognition", img)
+
+        # Check for 'Enter' key press, but only once every 1 frames
+            if cv2.waitKey(1) == 13:
                 break
-            
-            video_cap.release()
-            cv2.destroyAllWindows()
+
+        video_cap.release()
+        cv2.destroyAllWindows()
         
 if __name__ == "__main__": 
     root = Tk()
