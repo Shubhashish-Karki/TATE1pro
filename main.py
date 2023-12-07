@@ -5,6 +5,7 @@ from studentdetails import Student
 import os
 from train import Train
 from face_recognition import Face_Recognition
+from attendance import Attendance
 
 class Face_recog:
     def __init__(self,root):
@@ -41,11 +42,11 @@ class Face_recog:
         btn2 = btn2.resize((220, 220))
         self.photoimg3=ImageTk.PhotoImage(btn2)
         
-        #student info
-        b2=Button(lbl_1,image=self.photoimg3,cursor ="hand2")
+        #Attendance info
+        b2=Button(lbl_1,image=self.photoimg3,cursor ="hand2", command = self.attendance_data)
         b2.place(x=350,y=500,width=220,height=220)
         
-        b_2=Button(lbl_1,text="Attendance",cursor ="hand2", font=("arial",25,),bg="darkblue",fg="white")
+        b_2=Button(lbl_1,text="Attendance",cursor ="hand2",command = self.attendance_data ,font=("arial",25,),bg="darkblue",fg="white")
         b_2.place(x=350,y=720,width=220,height=30)
 
         #train face button
@@ -82,7 +83,10 @@ class Face_recog:
     def face_data(self):
         self.new_window=Toplevel(self.root)
         self.app=Face_Recognition(self.new_window)
-        
+
+    def attendance_data(self):
+        self.new_window=Toplevel(self.root)
+        self.app=Attendance(self.new_window) 
 if __name__ == "__main__":
     root=Tk()
     obj=Face_recog(root)

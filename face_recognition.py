@@ -7,6 +7,8 @@ import cv2
 import os
 import numpy as np
 import cv2.face
+from time import strftime
+from datetime import datetime
 
 class Face_Recognition:
     def __init__(self, root):
@@ -33,6 +35,22 @@ class Face_Recognition:
         
         b1=Button( lbl_right,text="Face Recognition",command=self.face_recog, cursor ="hand2",font=("times new roman",30,"bold"),bg="darkblue",fg="white")
         b1.place(x=275,y=500,width=350,height=60)
+
+    # -------------attendance--------------
+    def mark_attendance(self,i,r,n,d):
+        with open("attendance.csv","r+", newline ="\n") as f:
+            myDataList = f.readlines()
+            name_list = []
+            for line in myDataList:
+                entry=line.split(",")
+                name_list.append(entry[0])
+            if((i not in name_list) and   (r not in name_list) and   (n not in name_list) and   (d not in name_list)):
+                now = datetime.now()
+                d1 = now.strftime("%d/%m/%Y")
+                dtString=now.strftime("%H:%M:%S")
+                f.writelines(f"\n{i}, {r}, {n}, {d}, {dtString}, {d1}, Present")
+
+
         
     def face_recog(self):
         def draw_boundary(img,classifier,scaleFactor,minNeighbors,color,text,clf):
@@ -46,10 +64,10 @@ class Face_Recognition:
                 confidence=int(100*(1-predict/300))
                 print("predict="+str(predict)+"confidence="+ str(confidence))
                 
-                conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
+                conn=mysql.connector.connect(host="localhost",username="root",password="University@12",database="tate")
                 my_cursor=conn.cursor()
                 
-                my_cursor.execute("select name from student where sid="+str(id))#########  roll_no ki Student_id?
+                my_cursor.execute("select name from student where sid="+str(id ))#########  roll_no ki Student_id?
                 n=my_cursor.fetchone()
                 n="".join(str(n))
                 
@@ -60,13 +78,26 @@ class Face_Recognition:
                 my_cursor.execute("select Dep from student where sid="+str(id)) #########  roll_no ki Student_id?
                 d=my_cursor.fetchone()
                 d="".join(str(d))
+
+                my_cursor.execute("select sid from student where sid="+str(id)) #########  roll_no ki Student_id?
+                i=my_cursor.fetchone()
+                i="".join(str(i))
+
+                i = i.strip("()\"'")
+                r = r.strip("()\"'")
+                n = n.strip("()\"'")
+                d = d.strip("()\"'")
+                
+               
                 
                 
-                
+
                 if confidence>70:
+                    cv2.putText(img,f"ID:{i}",(x,y-75),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
                     cv2.putText(img,f"Roll:{r}",(x,y-55),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
                     cv2.putText(img,f"Name:{n}",(x,y-30),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
                     cv2.putText(img,f"Department:{d}",(x,y-5),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
+                    self.mark_attendance(i,r,n,d)
                 else:
                     cv2.rectangle(img,( x,y),(x+w,y+h),(0,0,255),3)
                     cv2.putText(img,"Unknown face",(x,y-5),cv2.FONT_HERSHEY_COMPLEX,0.8,(255,255,255),3)
@@ -79,10 +110,12 @@ class Face_Recognition:
             return(img)
         
         faceCascade=cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+        # clf = cv2.LBPHFaceRecognizer_create()
         clf=cv2.face.LBPHFaceRecognizer_create()
+    
         clf.read("classifier.xml")
         
-        video_cap=cv2.VideoCapture(1)
+        video_cap=cv2.VideoCapture(0)
         while True:
             ret, img = video_cap.read()
 

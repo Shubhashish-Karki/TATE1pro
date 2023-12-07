@@ -131,6 +131,13 @@ class Student:
         roll_entry=ttk.Entry(student_frame,textvariable=self.var_rollno,width=20,font=("arial", 12, "bold"))
         roll_entry.grid(row=0, column=3, padx=10, sticky=W)
 
+        #for sid
+        sid_label = Label(student_frame, text="Id", font=("arial", 12, "bold"), bg="white")
+        sid_label.grid(row=0, column=4, padx=10, sticky=W)
+
+        sid_entry=ttk.Entry(student_frame,textvariable=self.var_sid,width=10,font=("arial", 12, "bold"))
+        sid_entry.grid(row=0, column=5, padx=10, sticky=W)
+
         #photo sample
         self.var_rad1=StringVar()
         radio_btn1=ttk.Radiobutton(student_frame,text="Take photo samle", variable=self.var_rad1, value="Yes")
@@ -241,7 +248,7 @@ class Student:
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else :
             try:
-                conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
+                conn=mysql.connector.connect(host="localhost",username="root",password="University@12",database="tate")
                 my_cursor=conn.cursor()
                 my_cursor.execute("insert into student values(%s,%s,%s,%s,%s,%s,%s)",(
                                                                                 self.dep_var.get(),
@@ -262,7 +269,7 @@ class Student:
         
     #function to fetch data:
     def fetch(self):
-        conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
+        conn=mysql.connector.connect(host="localhost",username="root",password="University@12",database="tate")
         my_cursor=conn.cursor()
         my_cursor.execute("select * from student")
         data=my_cursor.fetchall()
@@ -297,7 +304,7 @@ class Student:
                 update=messagebox.askyesno("Update","Are you sure you want to update?",parent=self.root)
                 if update>0:
 
-                    conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
+                    conn=mysql.connector.connect(host="localhost",username="root",password="University@12",database="tate")
                     my_cursor=conn.cursor()
                     my_cursor.execute("update student set Dep=%s,course=%s,year=%s,name=%s,roll_no = %s,photo=%s where sid =%s",(
                                                                                 self.dep_var.get(),
@@ -331,7 +338,7 @@ class Student:
                 delete=messagebox.askyesno("Delete","Do you want to delete",parent=self.root)
                 if delete>0:
 
-                    conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
+                    conn=mysql.connector.connect(host="localhost",username="root",password="University@12",database="tate")
                     my_cursor=conn.cursor()
                     my_cursor.execute("delete  from student where sid =%s",(self.var_sid.get(),))
                 else:
@@ -353,11 +360,15 @@ class Student:
              messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
-                conn=mysql.connector.connect(host="localhost",username="root",password="!@#mySQL123",database="tate")
+                conn=mysql.connector.connect(host="localhost",username="root",password="University@12",database="tate")
                 my_cursor=conn.cursor()
                 my_cursor.execute("select * from student")
                 result=my_cursor.fetchall()
                 id=0
+               
+            
+
+
                 for x in result:
                     id+=1
                 my_cursor.execute("update student set Dep=%s,course=%s,year=%s,name=%s,roll_no=%s,photo=%s where sid =%s",(
@@ -366,9 +377,10 @@ class Student:
                                                                                 self.year_var.get(),
                                                                                 self.var_name.get(), 
                                                                                 self.var_rollno.get(),      
-                                                                                self.var_rad1.get(),  
-                                                                                self.var_sid.get()==id+1
-                                                                                                                                                    
+                                                                                self.var_rad1.get(),
+                                                                                # self.var_sid.get(id+1) 
+                                                                                self.var_sid.get()== id + 1
+                                                                                                                                                  
                 ))
                 conn.commit()
                 self.fetch()
@@ -385,17 +397,19 @@ class Student:
                         face_crop=img[y:y+h,x:x+w]
                         return face_crop
                     
-                cap = cv2.VideoCapture(1)
+                cap = cv2.VideoCapture(0)
     
 
                 img_id=0
                 while True:
+                
                     ret,my_frame=cap.read()
                     if face_crop(my_frame) is not None:
                         img_id+=1
                         face= cv2.resize(face_crop(my_frame),(450,450))
                         face= cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
                         file_path="data/user."+str(id)+"."+str(img_id)+".jpg"
+                        
                         cv2.imwrite(file_path,face)
                         cv2.putText(face,str(img_id),(50,50),cv2.FONT_HERSHEY_COMPLEX,2,(0,255,0),2)    #font size during cam
                         cv2.imshow("TATE",face)
@@ -414,3 +428,5 @@ if __name__ == "__main__":
     root = Tk()
     obj = Student(root)
     root.mainloop()
+
+       
