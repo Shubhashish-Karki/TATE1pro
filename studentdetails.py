@@ -128,9 +128,17 @@ class Student:
         roll_label = Label(student_frame, text="Roll no", font=("arial", 12, "bold"), bg="white")
         roll_label.grid(row=0, column=2, padx=10, sticky=W)
 
-        roll_entry=ttk.Entry(student_frame,textvariable=self.var_rollno,width=20,font=("arial", 12, "bold"))
+        roll_entry=ttk.Entry(student_frame,textvariable=self.var_rollno,width=5,font=("arial", 12, "bold"))
         roll_entry.grid(row=0, column=3, padx=10, sticky=W)
 
+        #for sid
+        sid_label = Label(student_frame, text="Id", font=("arial", 12, "bold"), bg="white")
+        sid_label.grid(row=0, column=4, padx=10, sticky=W)
+
+        sid_entry=ttk.Entry(student_frame,textvariable=self.var_sid,width=10,font=("arial", 12, "bold"))
+        sid_entry.grid(row=0, column=5, padx=10, sticky=W)
+
+      
         #photo sample
         self.var_rad1=StringVar()
         radio_btn1=ttk.Radiobutton(student_frame,text="Take photo samle", variable=self.var_rad1, value="Yes")
@@ -250,7 +258,7 @@ class Student:
                                                                                 self.var_name.get(),
                                                                                 self.var_rollno.get(),
                                                                                 self.var_rad1.get(),
-                                                                                None
+                                                                                self.var_sid.get(),
                                                                                 
                                                                         ))
                 conn.commit()
