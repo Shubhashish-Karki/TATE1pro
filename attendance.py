@@ -7,6 +7,7 @@ import cv2
 import os 
 import csv
 from tkinter import filedialog
+
 mydata=[]
 
 class Attendance:

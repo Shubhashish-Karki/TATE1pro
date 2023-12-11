@@ -6,6 +6,7 @@ import mysql.connector
 import cv2
 
 
+
 class Student:
     def __init__(self, root):
         self.root = root
@@ -397,7 +398,7 @@ class Student:
                         face_crop=img[y:y+h,x:x+w]
                         return face_crop
                     
-                cap = cv2.VideoCapture(0)
+                cap = cv2.VideoCapture(1)
     
 
                 img_id=0
@@ -408,7 +409,7 @@ class Student:
                         img_id+=1
                         face= cv2.resize(face_crop(my_frame),(450,450))
                         face= cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
-                        file_path="data/user."+str(id)+"."+str(img_id)+".jpg"
+                        file_path="data/user."+str(self.var_sid.get())+"."+str(img_id)+".jpg"
                         
                         cv2.imwrite(file_path,face)
                         cv2.putText(face,str(img_id),(50,50),cv2.FONT_HERSHEY_COMPLEX,2,(0,255,0),2)    #font size during cam

@@ -1,3 +1,6 @@
 env/
 __pycache__/
 data/
+classifier.xml/
+attendance1.csv/
+attendance2.csv/
