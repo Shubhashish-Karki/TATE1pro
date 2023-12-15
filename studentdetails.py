@@ -24,7 +24,7 @@ class Student:
         self.var_sid = StringVar()
 
         # Background image
-        img1 = Image.open(r"images\student.jpg")
+        img1 = Image.open(r"images\stubg.jpg")
         img1 = img1.resize((1700, 1000))
         self.photimg1 = ImageTk.PhotoImage(img1)
 
@@ -33,18 +33,18 @@ class Student:
 
         # Font in image
         title_lbl = Label(lbl_1, text="Student Details", font=(
-            "Arial", 42, "bold"), bg="gold", fg="green")
+            "Arial", 42, "bold"))
         title_lbl.place(x=0, y=20, width=1530, height=45)
 
-        main_frame = Frame(lbl_1, bd=2, bg="gold")
-        main_frame.place(x=20, y=84, width=1500, height=700)
+        # main_frame = Frame(lbl_1, bd=2)
+        # main_frame.place(x=20, y=84, width=1500, height=700)
 
         # Left frame
-        Left_frame = LabelFrame(main_frame, bd=2, bg="white", relief=RIDGE,
+        Left_frame = LabelFrame(lbl_1, bd=2, bg="white", relief=RIDGE,
                                 text="Student Info", font=("arial", 15, "bold"))
-        Left_frame.place(x=10, y=10, width=720, height=650)
+        Left_frame.place(x=10, y=80, width=720, height=650)
 
-        leftimg1 = Image.open(r"images\leftimg1.jpg")
+        leftimg1 = Image.open(r"images\regleft.jpg")
         leftimg1 = leftimg1.resize((700, 130))
         self.photimg_left = ImageTk.PhotoImage(leftimg1)
 
@@ -183,20 +183,20 @@ class Student:
 
         # take photo,
         take = Button(btn_frame, command=self.gen_dataset, text="Take Photo",
-                      width=15, font=("arial", 12, "bold"), bg="gold", fg="green")
+                      width=15, font=("arial", 12, "bold"))
         take.grid(row=2, column=1, padx=2)
 
         # update photo
         update_photo = Button(btn_frame, text="Update Photo", width=15, font=(
-            "arial", 12, "bold"), bg="gold", fg="green")
+            "arial", 12, "bold"))
         update_photo.grid(row=2, column=3, padx=2)
 
         # Right frame
-        Right_frame = LabelFrame(main_frame, bd=2, bg="white", relief=RIDGE,
+        Right_frame = LabelFrame(lbl_1, bd=2, bg="white", relief=RIDGE,
                                  text="Student Info", font=("arial", 15, "bold"))
-        Right_frame.place(x=770, y=10, width=720, height=650)
+        Right_frame.place(x=770, y=80, width=720, height=650)
 
-        rightimg1 = Image.open(r"images\rightimg1.jpg")
+        rightimg1 = Image.open(r"images\fdet.jpg")
         rightimg1 = rightimg1.resize((700, 130))
         self.photoimg_right = ImageTk.PhotoImage(rightimg1)
 
