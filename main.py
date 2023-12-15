@@ -1,93 +1,122 @@
-from tkinter import*
+from tkinter import *
+import customtkinter
 from tkinter import ttk
-from PIL import Image,ImageTk
+from PIL import Image, ImageTk
 from studentdetails import Student
+from tkinter import messagebox
 import os
 from train import Train
 from face_recognition import Face_Recognition
 from attendance import Attendance
+import cv2
+import mysql.connector
+import numpy as np
+import cv2.face
+
 
 class Face_recog:
-    def __init__(self,root):
+    def __init__(self, root):
         self.root = root
-        self.root.geometry("1920x1080+0+0") #setting window size
-        self.root.title("Face recognition attendance system ") # name of window
+        self.root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(),
+                           root.winfo_screenheight()))  # setting window size
+        # name of window
+        self.root.title("Transparent Attendance Tracking System - TATE ")
 
-        #background image
-        img1 = Image.open(r"images\download.jpg")
-        img1 = img1.resize((1800, 1000))
-        self.photimg1=ImageTk.PhotoImage(img1)
+        # background image
+        img1 = Image.open(r"images\homebg.jpg")
 
-        lbl_1 = Label(self.root,image=self.photimg1)
-        lbl_1.place(x=0,y=0,width=1800,height=1000)
+        img1 = img1.resize((self.root.winfo_screenwidth(),
+                           self.root.winfo_screenheight()))
+        self.photimg1 = ImageTk.PhotoImage(img1)
 
-        #font in image
-        title_lbl = Label(lbl_1,text="TATE",font=("Arial",42,"bold"),bg="gold",fg="green")
-        title_lbl.place(x=0,y=20,width=1530,height=45)
+        # lbl_1 = Label(self.root, image=self.photimg1)
+        # lbl_1.place(x=0, y=0, width=1800, height=1000)
 
-        #button
-        btn1 = Image.open(r"images\btn1.jpg")
-        btn1 = btn1.resize((220, 220))
-        self.photoimg2=ImageTk.PhotoImage(btn1)
-        
-        #student info
-        b1=Button(lbl_1,command=self.student_details,image=self.photoimg2,cursor ="hand2")
-        b1.place(x=100,y=500,width=220,height=220)
-        
-        b_1=Button(lbl_1,text="Student Details",command=self.student_details,cursor ="hand2", font=("arial",25,),bg="darkblue",fg="white")
-        b_1.place(x=100,y=720,width=220,height=30)
+        lbl_1 = Label(self.root, image=self.photimg1)
+        lbl_1.place(x=0, y=0, relwidth=1, relheight=1)
 
-        #button
-        btn2 = Image.open(r"images\btn2.jpg")
-        btn2 = btn2.resize((220, 220))
-        self.photoimg3=ImageTk.PhotoImage(btn2)
-        
-        #Attendance info
-        b2=Button(lbl_1,image=self.photoimg3,cursor ="hand2", command = self.attendance_data)
-        b2.place(x=350,y=500,width=220,height=220)
-        
-        b_2=Button(lbl_1,text="Attendance",cursor ="hand2",command = self.attendance_data ,font=("arial",25,),bg="darkblue",fg="white")
-        b_2.place(x=350,y=720,width=220,height=30)
+        # # font in image
+        # title_lbl = Label(lbl_1, text="TATE", font=(
+        #     "Arial", 42, "bold"), bg="gold", fg="green")
+        # title_lbl.place(x=0, y=20, width=1530, height=45)
 
-        #train face button
-        btn3 = Image.open(r"images\btn2.jpg")
-        btn3 = btn3.resize((220, 220))
-        self.photoimg4=ImageTk.PhotoImage(btn3)
-        
-        b3=Button(lbl_1,image=self.photoimg4,cursor ="hand2",command=self.train_data)
-        b3.place(x=600,y=500,width=220,height=220)
-        
-        b_3=Button(lbl_1,text="Train Data",cursor ="hand2",command=self.train_data, font=("arial",25,),bg="darkblue",fg="white")
-        b_3.place(x=600,y=720,width=220,height=30)
-        
-        #face recognition
-        btn4 = Image.open(r"images\btn2.jpg")
-        btn4 = btn4.resize((220, 220))
-        self.photoimg5=ImageTk.PhotoImage(btn4)
-        
-        b3=Button(lbl_1,image=self.photoimg5,cursor ="hand2",command=self.face_data)
-        b3.place(x=850,y=500,width=220,height=220)
-        
-        b_3=Button(lbl_1,text="Face Detector",cursor ="hand2",command=self.face_data, font=("arial",25,),bg="darkblue",fg="white")
-        b_3.place(x=850,y=720,width=220,height=30)
-        #button function --------------------------------
+        # button
+        info_icon = ImageTk.PhotoImage(Image.open(
+            "icons\info.png").resize((20, 20), Image.LANCZOS))
+        button_1 = customtkinter.CTkButton(
+            master=root, image=info_icon, text="Student Info", width=190, height=40, compound="left", command=self.student_details,
+            cursor="hand2")
+        button_1.pack(side=LEFT, pady=20, padx=20)
+
+        # buttons
+        attendance_icon = ImageTk.PhotoImage(Image.open(
+            r"icons\attendance.png").resize((20, 20), Image.LANCZOS))
+        # Attendance info
+        button_2 = customtkinter.CTkButton(
+            master=root, image=attendance_icon, text="Attendance", width=190, height=40, compound="left", cursor="hand2", command=self.attendance_data)
+        button_2.pack(side=LEFT, pady=20, padx=20)
+
+        # train face button
+        train_icon = ImageTk.PhotoImage(Image.open(
+            r"icons\train.png").resize((20, 20), Image.LANCZOS))
+        button_3 = customtkinter.CTkButton(
+            master=root, image=train_icon, text="Train Data", width=190, height=40, compound="left", cursor="hand2", command=self.train_classifier)
+        button_3.pack(side=LEFT, pady=20, padx=20)
+
+        # face recognition
+        detector_icon = ImageTk.PhotoImage(Image.open(
+            "icons\detector.png").resize((20, 20), Image.LANCZOS))
+
+        button_4 = customtkinter.CTkButton(
+            master=root, image=detector_icon, text="Face Detector", width=190, height=40, compound="left", fg_color="#D35B58", hover_color="#C77C78", cursor="hand2", command=self.face_data)
+        button_4.pack(side=LEFT, pady=20, padx=20)
+
+    # button function --------------------------------
 
     def student_details(self):
-        self.new_window=Toplevel(self.root)
-        self.app=Student(self.new_window)
+        self.new_window = Toplevel(self.root)
+        self.app = Student(self.new_window)
 
     def train_data(self):
-        self.new_window=Toplevel(self.root)
-        self.app=Train(self.new_window)
+        self.new_window = Toplevel(self.root)
+        self.app = Train(self.new_window)
 
     def face_data(self):
-        self.new_window=Toplevel(self.root)
-        self.app=Face_Recognition(self.new_window)
+        self.new_window = Toplevel(self.root)
+        self.app = Face_Recognition(self.new_window)
 
     def attendance_data(self):
-        self.new_window=Toplevel(self.root)
-        self.app=Attendance(self.new_window) 
+        self.new_window = Toplevel(self.root)
+        self.app = Attendance(self.new_window)
+
+    def train_classifier(self):
+        data_dir = ("data")
+        path = [os.path.join(data_dir, file) for file in os.listdir(data_dir)]
+
+        faces = []
+        ids = []
+
+        for image in path:
+            img = Image.open(image).convert('L')  # greyscale
+            imageNp = np.array(img, 'uint8')
+            id = int(os.path.split(image)[1].split('.')[1])
+
+            faces.append(imageNp)
+            ids.append(id)
+            cv2.imshow("Training", imageNp)
+            cv2.waitKey(1) == 13
+
+        ids = np.array(ids)
+
+        # train the classifier and save
+        clf = cv2.face.LBPHFaceRecognizer_create()
+        clf.train(faces, ids)
+        clf.write("classifier.xml")
+        cv2.destroyAllWindows()
+        messagebox.showinfo("Result", "Training datasets completed!")
+
+
 if __name__ == "__main__":
-    root=Tk()
-    obj=Face_recog(root)
+    root = Tk()
+    obj = Face_recog(root)
     root.mainloop()
