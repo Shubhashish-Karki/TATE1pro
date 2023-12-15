@@ -25,30 +25,30 @@ class Student:
 
         # Background image
         img1 = Image.open(r"images\stubg.jpg")
-        img1 = img1.resize((1700, 1000))
+        img1 = img1.resize((1920, 1080))
         self.photimg1 = ImageTk.PhotoImage(img1)
 
         lbl_1 = Label(self.root, image=self.photimg1)
         lbl_1.place(x=0, y=0, width=1700, height=1000)
 
         # Font in image
-        title_lbl = Label(lbl_1, text="Student Details", font=(
-            "Arial", 42, "bold"))
-        title_lbl.place(x=0, y=20, width=1530, height=45)
+        # title_lbl = Label(lbl_1, text="Student Details", font=(
+        #     "Arial", 42, "bold"))
+        # title_lbl.place(x=0, y=20, width=1530, height=45)
 
         # main_frame = Frame(lbl_1, bd=2)
         # main_frame.place(x=20, y=84, width=1500, height=700)
 
         # Left frame
-        Left_frame = LabelFrame(lbl_1, bd=2, bg="white", relief=RIDGE,
+        Left_frame = LabelFrame(lbl_1, bd=2, bg="white", relief=GROOVE,
                                 text="Student Info", font=("arial", 15, "bold"))
-        Left_frame.place(x=10, y=80, width=720, height=650)
+        Left_frame.place(x=30, y=120, width=720, height=650)
 
         leftimg1 = Image.open(r"images\regleft.jpg")
         leftimg1 = leftimg1.resize((700, 130))
         self.photimg_left = ImageTk.PhotoImage(leftimg1)
 
-        lbl_left = Label(Left_frame, image=self.photimg_left)
+        lbl_left = Label(Left_frame, image=self.photimg_left, relief=GROOVE)
         lbl_left.place(x=10, y=0, width=680, height=170)
 
         # Course frame----------------------------------------------------------------
@@ -194,13 +194,14 @@ class Student:
         # Right frame
         Right_frame = LabelFrame(lbl_1, bd=2, bg="white", relief=RIDGE,
                                  text="Student Info", font=("arial", 15, "bold"))
-        Right_frame.place(x=770, y=80, width=720, height=650)
+        Right_frame.place(x=770, y=120, width=720, height=650)
 
         rightimg1 = Image.open(r"images\fdet.jpg")
         rightimg1 = rightimg1.resize((700, 130))
         self.photoimg_right = ImageTk.PhotoImage(rightimg1)
 
-        lbl_right = Label(Right_frame, image=self.photoimg_right)
+        lbl_right = Label(
+            Right_frame, image=self.photoimg_right, relief=GROOVE)
         lbl_right.place(x=10, y=0, width=680, height=170)
 
         # search student details frame
