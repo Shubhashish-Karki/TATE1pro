@@ -213,22 +213,26 @@ class Student:
                              font=("arial", 12, "bold"), bg="red")
         search_label.grid(row=0, column=0, padx=10, pady=5, sticky=W)
 
-        search_combobox = ttk.Combobox(search_frame, font=(
+        # variable to search
+        self.search_var = StringVar()
+        search_combobox = ttk.Combobox(search_frame, textvariable=self.search_var, font=(
             "arial", 10, "bold"), state="readonly")
         search_combobox["values"] = (
-            "Select", "Year", "Department", "Roll no", "Name")
+            "Select", "year", "Dep", "roll_no", "Name")
         search_combobox.current(0)
+
         search_combobox.grid(row=0, column=1, padx=2, pady=10)
 
+        self.searchTxt_var = StringVar()
         search_entry = ttk.Entry(
-            search_frame, width=15, font=("arial", 12, "bold"))
+            search_frame, textvariable=self.searchTxt_var, width=15, font=("arial", 12, "bold"))
         search_entry.grid(row=0, column=2, padx=10, sticky=W)
 
-        search_btn = Button(search_frame, text="Search", width=10, font=(
+        search_btn = Button(search_frame, text="Search", command=self.search_data, width=10, font=(
             "arial", 12, "bold"), bg="blue", fg="white",)
         search_btn.grid(row=0, column=3, padx=2)
 
-        show_btn = Button(search_frame, text="Show All", width=10, font=(
+        show_btn = Button(search_frame, text="Show All", command=self.fetch, width=10, font=(
             "arial", 12, "bold"), bg="blue", fg="white",)
         show_btn.grid(row=0, column=4, padx=2)
 
@@ -393,6 +397,28 @@ class Student:
             except Exception as es:
                 messagebox.showerror(
                     "Error", f"Due To :{str(es)}", parent=self.root)
+
+  # function to search
+    def search_data(self):
+        if self.search_var.get() == "Select":
+            messagebox.showerror("Error", f"Select a field", parent=self.root)
+        else:
+            conn = mysql.connector.connect(
+                host="localhost", username="root", password="Rajni@kanth,786", database="tate")
+            my_cursor = conn.cursor()
+            my_cursor.execute("SELECT * FROM student WHERE " + str(
+                self.search_var.get()) + " LIKE '%" + str(self.searchTxt_var.get()) + "%'")
+
+            rows = my_cursor.fetchall()
+
+            if len(rows) != 0:
+                self.table.delete(*self.table.get_children())
+                for i in rows:
+                    self.table.insert("", END, values=i)
+                conn.commit()
+            else:
+                messagebox.showerror("Error", f"Not found", parent=self.root)
+            conn.close()
 
     #  take photo sample----------------------------------------------------------------
 
