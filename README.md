@@ -22,6 +22,10 @@ TATE is an attendance tracking system developed using Python and OpenCV. It leve
    pip install -r requirements.txt
    ```
 
+   📌 These requirements are subject to modification as the development process evolves. Ensure to update and reinstall dependencies as necessary.
+
+
+
 3. **Download Haar Cascade Classifier**:
    The project uses OpenCV's pre-trained Haar Cascade classifier for face detection. Ensure `haarcascade_frontalface_default.xml` is present in the project directory. If not, download it from [OpenCV's GitHub repository](https://github.com/opencv/opencv/tree/master/data/haarcascades).
 
