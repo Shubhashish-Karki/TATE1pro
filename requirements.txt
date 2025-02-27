@@ -1,0 +1,7 @@
+numpy
+pandas
+opencv-python
+dlib
+face-recognition
+tkinter
+pillow
